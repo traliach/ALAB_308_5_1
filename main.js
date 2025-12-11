@@ -50,3 +50,40 @@ const words2 = ["cat", "hippopotamus", "dog", "giraffe"];
 console.log("Longest in", words1, "is", longestString(words1));
 console.log("Longest in", words2, "is", longestString(words2));
 
+// output:
+// Longest in [ 'say', 'hello', 'in', 'the', 'morning' ] is morning
+// Longest in [ 'cat', 'hippopotamus', 'dog', 'giraffe' ] is hippopotamus
+
+// Return a new array of strings that are strictly longer than minLength.
+// Does not change (mutate) the original array.
+function stringsLongerThan(strings, minLength) {
+  const result = [];
+
+  for (const str of strings) {
+    if (str.length > minLength) {
+      result.push(str);
+    }
+  }
+
+  return result;
+}
+
+// Quick tests for stringsLongerThan
+console.log(
+  "Strings longer than 3 in",
+  words1,
+  "are",
+  stringsLongerThan(words1, 3)
+);
+
+console.log(
+  "Strings longer than 4 in",
+  words2,
+  "are",
+  stringsLongerThan(words2, 4)
+);
+
+// output:
+// Strings longer than 3 in [ 'say', 'hello', 'in', 'the', 'morning' ] are [ 'say', 'hello', 'morning' ]
+// Strings longer than 4 in [ 'cat', 'hippopotamus', 'dog', 'giraffe' ] are [ 'hippopotamus', 'giraffe' ]
+
