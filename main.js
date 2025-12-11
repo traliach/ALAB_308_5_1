@@ -101,3 +101,35 @@ function printNumbersRecursively(n, current = 1) {
 console.log("Printing numbers from 1 to 5:");
 printNumbersRecursively(5);
 
+// output:
+// Printing numbers from 1 to 5:
+// 1
+// 2
+// 3
+// 4
+// 5    
+
+// =======================
+// Part 2: Thinking Methodically (Array Methods + Callbacks)
+// =======================
+
+const people = [
+    { id: "42", name: "Bruce",  occupation: "Knight",      age: "41" },
+    { id: "48", name: "Barry",  occupation: "Runner",      age: "25" },
+    { id: "57", name: "Bob",    occupation: "Fry Cook",    age: "19" },
+    { id: "63", name: "Blaine", occupation: "Quiz Master", age: "58" },
+    { id: "7",  name: "Bilbo",  occupation: "None",        age: "111" },
+  ];
+  
+  console.log("People data:", people);
+
+  // output:
+  // People data: [
+  //   { id: '42', name: 'Bruce', occupation: 'Knight', age: '41' },
+  //   { id: '48', name: 'Barry', occupation: 'Runner', age: '25' },
+  //   { id: '57', name: 'Bob', occupation: 'Fry Cook', age: '19' },
+  //   { id: '63', name: 'Blaine', occupation: 'Quiz Master', age: '58' },
+  //   { id: '7', name: 'Bilbo', occupation: 'None', age: '111' }
+  // ]
+  
+  
