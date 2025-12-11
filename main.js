@@ -87,3 +87,17 @@ console.log(
 // Strings longer than 3 in [ 'say', 'hello', 'in', 'the', 'morning' ] are [ 'say', 'hello', 'morning' ]
 // Strings longer than 4 in [ 'cat', 'hippopotamus', 'dog', 'giraffe' ] are [ 'hippopotamus', 'giraffe' ]
 
+// Print numbers from 1 up to n using recursion (no loops).
+function printNumbersRecursively(n, current = 1) {
+  if (current > n) {
+    return; // base case: stop when current is greater than n
+  }
+
+  console.log(current);
+  printNumbersRecursively(n, current + 1); // recursive step
+}
+
+// Quick tests for printNumbersRecursively
+console.log("Printing numbers from 1 to 5:");
+printNumbersRecursively(5);
+
