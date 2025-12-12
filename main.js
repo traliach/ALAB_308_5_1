@@ -199,7 +199,20 @@ function calculatePercent(score, possible) {
   return earned / maxPossible;
 }
 
-// Placeholder getLearnerData: returns empty array to avoid errors.
+// Helper: find a submission for a specific assignment for one learner.
+function findSubmissionForAssignment(learnerSubmissions, assignmentId) {
+  for (const submissionRecord of learnerSubmissions) {
+    const recordAssignmentId = Number(submissionRecord.assignment_id);
+
+    if (recordAssignmentId === assignmentId) {
+      return submissionRecord;
+    }
+  }
+
+  return null;
+}
+
+// Main function: build learner results with per-assignment percentages and averages.
 function getLearnerData(course, assignmentGroup, submissions) {
   // Step 2: run basic validation on course and assignment group.
   validateCourseAndGroup(course, assignmentGroup);
@@ -211,11 +224,64 @@ function getLearnerData(course, assignmentGroup, submissions) {
   // Step 4: group submissions by learner.
   const submissionsByLearner = groupSubmissionsByLearner(submissions);
 
-  // For now we just log the intermediate structures so you can see them.
-  console.log("Assignments map:", assignmentsById);
-  console.log("Submissions by learner:", submissionsByLearner);
+  const results = [];
 
-  return [];
+  // Main loop: go through each learner.
+  for (const learnerId in submissionsByLearner) {
+    const learnerSubmissions = submissionsByLearner[learnerId];
+    const learnerResult = { id: Number(learnerId) };
+
+    let totalEarned = 0;
+    let totalPossible = 0;
+
+    // Inner loop: go through each assignment.
+    for (const assignmentId in assignmentsById) {
+      const assignmentInfo = assignmentsById[assignmentId];
+
+      // Skip assignments that are not yet due.
+      if (!assignmentInfo.isDue) {
+        continue;
+      }
+
+      const assignmentNumericId = Number(assignmentId);
+      const submissionRecord = findSubmissionForAssignment(
+        learnerSubmissions,
+        assignmentNumericId
+      );
+
+      // If this learner has no submission for this assignment, skip it.
+      if (!submissionRecord || !submissionRecord.submission) {
+        continue;
+      }
+
+      const submission = submissionRecord.submission;
+
+      // Apply late penalty, then compute percentage.
+      const adjustedScore = applyLatePenalty(
+        submission.score,
+        assignmentInfo.pointsPossible,
+        submission.submitted_at,
+        assignmentInfo.dueDate
+      );
+
+      const percent = calculatePercent(adjustedScore, assignmentInfo.pointsPossible);
+
+      // Store the percentage under the assignment id key.
+      learnerResult[assignmentId] = percent;
+
+      // Update totals used for the average.
+      totalEarned += adjustedScore;
+      totalPossible += assignmentInfo.pointsPossible;
+    }
+
+    // Only compute avg if there were any due assignments counted.
+    if (totalPossible > 0) {
+      learnerResult.avg = totalEarned / totalPossible;
+      results.push(learnerResult);
+    }
+  }
+
+  return results;
 }
 
 // Step 1: Wrap getLearnerData call in try/catch
