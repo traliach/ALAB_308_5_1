@@ -134,6 +134,26 @@ function buildAssignmentsMap(assignmentGroup, now) {
   return assignmentsById;
 }
 
+// Step 4: Group submissions by learner.
+function groupSubmissionsByLearner(submissions) {
+  const submissionsByLearner = {};
+
+  // Use a for...of loop to go through each submission.
+  for (const submissionRecord of submissions) {
+    const learnerId = Number(submissionRecord.learner_id);
+
+    // If this learner does not exist in the object yet, create an empty array.
+    if (!submissionsByLearner[learnerId]) {
+      submissionsByLearner[learnerId] = [];
+    }
+
+    // Push the whole submission record into the learner's array.
+    submissionsByLearner[learnerId].push(submissionRecord);
+  }
+
+  return submissionsByLearner;
+}
+
 // Placeholder getLearnerData: returns empty array to avoid errors.
 function getLearnerData(course, assignmentGroup, submissions) {
   // Step 2: run basic validation on course and assignment group.
@@ -143,8 +163,12 @@ function getLearnerData(course, assignmentGroup, submissions) {
   const now = new Date();
   const assignmentsById = buildAssignmentsMap(assignmentGroup, now);
 
-  // For now we just log the map so you can see it while we build the rest.
+  // Step 4: group submissions by learner.
+  const submissionsByLearner = groupSubmissionsByLearner(submissions);
+
+  // For now we just log the intermediate structures so you can see them.
   console.log("Assignments map:", assignmentsById);
+  console.log("Submissions by learner:", submissionsByLearner);
 
   return [];
 }
