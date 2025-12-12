@@ -154,6 +154,51 @@ function groupSubmissionsByLearner(submissions) {
   return submissionsByLearner;
 }
 
+// Step 5: Late-check and percentage helpers.
+const LATE_PENALTY_RATE = 0.1;
+
+function isLate(submittedAt, dueAt) {
+  const submittedDate = new Date(submittedAt);
+  const dueDate = new Date(dueAt);
+
+  if (Number.isNaN(submittedDate.getTime()) || Number.isNaN(dueDate.getTime())) {
+    throw new Error("Invalid date when checking for late submission.");
+  }
+
+  return submittedDate > dueDate;
+}
+
+function applyLatePenalty(score, possible, submittedAt, dueAt) {
+  let adjustedScore = Number(score);
+  const maxPossible = Number(possible);
+
+  if (!Number.isFinite(adjustedScore) || !Number.isFinite(maxPossible)) {
+    throw new Error("Invalid score or points_possible when applying late penalty.");
+  }
+
+  if (isLate(submittedAt, dueAt)) {
+    adjustedScore = adjustedScore - LATE_PENALTY_RATE * maxPossible;
+  }
+
+  // Cap at 0 so it never goes negative.
+  if (adjustedScore < 0) {
+    adjustedScore = 0;
+  }
+
+  return adjustedScore;
+}
+
+function calculatePercent(score, possible) {
+  const earned = Number(score);
+  const maxPossible = Number(possible);
+
+  if (!Number.isFinite(earned) || !Number.isFinite(maxPossible) || maxPossible <= 0) {
+    throw new Error("Invalid values for percentage calculation.");
+  }
+
+  return earned / maxPossible;
+}
+
 // Placeholder getLearnerData: returns empty array to avoid errors.
 function getLearnerData(course, assignmentGroup, submissions) {
   // Step 2: run basic validation on course and assignment group.
